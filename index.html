@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Event Management System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* === CSS RESET === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* === VARIABLES === */
         :root {
             --primary: #2c3e50;
             --secondary: #3498db;
@@ -18,38 +28,135 @@
             --info: #17a2b8;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
+            --radius: 8px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
+        /* === BASE STYLES === */
         body {
             background-color: #f5f7fa;
             color: var(--dark);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Header Styles */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-size: 2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* === BUTTONS === */
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background-color: #16a085;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* === HEADER === */
         header {
             background-color: var(--primary);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem 0;
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
         }
 
         .logo {
@@ -59,7 +166,7 @@
         }
 
         .logo i {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: var(--accent);
         }
 
@@ -106,63 +213,63 @@
             gap: 1rem;
         }
 
-        .btn {
-            padding: 0.5rem 1.2rem;
+        .mobile-menu-btn {
+            display: none;
+            background: none;
             border: none;
-            border-radius: 4px;
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
         }
 
-        .btn-primary {
-            background-color: var(--secondary);
+        /* === HERO SECTION === */
+        .hero {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
             color: white;
+            padding: 5rem 0;
+            text-align: center;
         }
 
-        .btn-primary:hover {
-            background-color: #2980b9;
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .btn-accent {
-            background-color: var(--accent);
-            color: white;
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
 
-        .btn-accent:hover {
-            background-color: #16a085;
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
         }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--light);
-            color: white;
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
-        .btn-outline:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Main Content */
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
+        /* === DASHBOARD === */
         .dashboard {
             display: grid;
             grid-template-columns: 250px 1fr;
             gap: 2rem;
+            margin: 2rem 0;
         }
 
-        /* Sidebar */
+        /* === SIDEBAR === */
         .sidebar {
             background-color: white;
-            border-radius: 8px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
             padding: 1.5rem;
             height: fit-content;
+            position: sticky;
+            top: 100px;
         }
 
         .sidebar-title {
@@ -203,7 +310,7 @@
             text-align: center;
         }
 
-        /* Main Content Area */
+        /* === MAIN CONTENT AREA === */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -214,7 +321,7 @@
             background: linear-gradient(135deg, var(--secondary), var(--primary));
             color: white;
             padding: 2rem;
-            border-radius: 8px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
         }
 
@@ -236,12 +343,17 @@
 
         .stat-card {
             background-color: white;
-            border-radius: 8px;
+            border-radius: var(--radius);
             padding: 1.5rem;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
 
         .stat-card i {
@@ -263,7 +375,7 @@
 
         .card {
             background-color: white;
-            border-radius: 8px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
             padding: 1.5rem;
         }
@@ -293,7 +405,7 @@
 
         .event-card {
             border: 1px solid var(--light);
-            border-radius: 8px;
+            border-radius: var(--radius);
             overflow: hidden;
             transition: var(--transition);
         }
@@ -346,6 +458,7 @@
             justify-content: space-between;
         }
 
+        /* === BADGES === */
         .badge {
             display: inline-block;
             padding: 0.3rem 0.8rem;
@@ -369,20 +482,159 @@
             color: var(--warning);
         }
 
-        /* Footer */
+        .badge-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        /* === FORMS === */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* === TABLES === */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .table th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* === MODALS === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* === FOOTER === */
         footer {
             background-color: var(--primary);
             color: white;
-            padding: 2rem;
+            padding: 3rem 0 1rem;
             margin-top: 3rem;
         }
 
         .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
+            margin-bottom: 2rem;
         }
 
         .footer-section h3 {
@@ -411,14 +663,13 @@
 
         .copyright {
             text-align: center;
-            margin-top: 2rem;
             padding-top: 1.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: #bdc3c7;
             font-size: 0.9rem;
         }
 
-        /* Responsive Design */
+        /* === RESPONSIVE DESIGN === */
         @media (max-width: 1024px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -452,6 +703,34 @@
             .events-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+                width: 100%;
+            }
+            
+            nav.active ul {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -470,18 +749,80 @@
             .card {
                 padding: 1rem;
             }
+            
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* === UTILITY CLASSES === */
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .mb-1 {
+            margin-bottom: 1rem;
+        }
+        
+        .mb-2 {
+            margin-bottom: 2rem;
+        }
+        
+        .mt-1 {
+            margin-top: 1rem;
+        }
+        
+        .mt-2 {
+            margin-top: 2rem;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .justify-between {
+            justify-content: space-between;
+        }
+        
+        .align-center {
+            align-items: center;
+        }
+        
+        .gap-1 {
+            gap: 1rem;
+        }
+        
+        .w-100 {
+            width: 100%;
+        }
+        
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        <div class="header-container">
+        <div class="container header-container">
             <div class="logo">
                 <i class="fas fa-calendar-alt"></i>
                 <h1>Event Management System</h1>
             </div>
-            <nav>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
                 <ul>
                     <li><a href="#" class="active">Dashboard</a></li>
                     <li><a href="#">Events</a></li>
@@ -490,12 +831,27 @@
                     <li><a href="#">Resources</a></li>
                 </ul>
             </nav>
+            
             <div class="user-actions">
                 <button class="btn btn-outline"><i class="fas fa-bell"></i></button>
                 <button class="btn btn-primary"><i class="fas fa-user"></i> Pratham Bhaiya</button>
             </div>
         </div>
     </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>College Event Management System</h2>
+                <p>A comprehensive platform to manage all institutional events, from planning to execution and reporting.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-accent btn-lg"><i class="fas fa-plus"></i> Create New Event</button>
+                    <button class="btn btn-outline btn-lg"><i class="fas fa-calendar"></i> View Calendar</button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Main Content -->
     <div class="container">
@@ -552,7 +908,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-list"></i> Upcoming Events</h3>
-                        <button class="btn btn-primary">Create New Event</button>
+                        <button class="btn btn-primary" id="createEventBtn">Create New Event</button>
                     </div>
                     <div class="events-grid">
                         <!-- Event Card 1 -->
@@ -569,7 +925,7 @@
                                 <p class="event-description">Interactive session with industry leaders on emerging technologies.</p>
                                 <div class="event-actions">
                                     <span class="badge badge-primary">48 Registered</span>
-                                    <button class="btn btn-accent">Manage</button>
+                                    <button class="btn btn-accent btn-sm">Manage</button>
                                 </div>
                             </div>
                         </div>
@@ -588,7 +944,7 @@
                                 <p class="event-description">Annual alumni networking event with keynote speakers.</p>
                                 <div class="event-actions">
                                     <span class="badge badge-success">92 Registered</span>
-                                    <button class="btn btn-accent">Manage</button>
+                                    <button class="btn btn-accent btn-sm">Manage</button>
                                 </div>
                             </div>
                         </div>
@@ -607,10 +963,25 @@
                                 <p class="event-description">Hands-on workshop on research methodology and publication.</p>
                                 <div class="event-actions">
                                     <span class="badge badge-warning">25 Registered</span>
-                                    <button class="btn btn-accent">Manage</button>
+                                    <button class="btn btn-accent btn-sm">Manage</button>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Event Analytics</h3>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-outline btn-sm">Monthly</button>
+                            <button class="btn btn-outline btn-sm">Quarterly</button>
+                            <button class="btn btn-primary btn-sm">Yearly</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="analyticsChart" height="300"></canvas>
                     </div>
                 </div>
 
@@ -619,76 +990,556 @@
                     <div class="card-header">
                         <h3 class="card-title"><i class="fas fa-history"></i> Recent Activity</h3>
                     </div>
-                    <div class="activity-list">
-                        <!-- Activity items would go here -->
-                        <p style="padding: 1rem; text-align: center; color: #7f8c8d;">
-                            Recent activity feed would appear here showing event updates, registrations, and system notifications.
-                        </p>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Activity</th>
+                                    <th>Event</th>
+                                    <th>Participants</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Oct 10, 2023</td>
+                                    <td>Event Created</td>
+                                    <td>Industry Expert Session</td>
+                                    <td>0</td>
+                                    <td><span class="badge badge-primary">Draft</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 12, 2023</td>
+                                    <td>Event Published</td>
+                                    <td>Alumni Meet 2023</td>
+                                    <td>92</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 15, 2023</td>
+                                    <td>Attendance Marked</td>
+                                    <td>Career Guidance Workshop</td>
+                                    <td>67</td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 18, 2023</td>
+                                    <td>Report Generated</td>
+                                    <td>Technical Symposium</td>
+                                    <td>124</td>
+                                    <td><span class="badge badge-warning">Pending Review</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 20, 2023</td>
+                                    <td>Certificates Issued</td>
+                                    <td>Web Development Bootcamp</td>
+                                    <td>45</td>
+                                    <td><span class="badge badge-success">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>Event Management System</h3>
-                <p>A comprehensive solution for managing college events, resources, and participants.</p>
+    <!-- Create Event Modal -->
+    <div class="modal" id="createEventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Event</h3>
+                <button class="modal-close" id="closeEventModal">&times;</button>
             </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">Dashboard</a></li>
-                    <li><a href="#">Events Calendar</a></li>
-                    <li><a href="#">Create Event</a></li>
-                    <li><a href="#">Reports</a></li>
-                </ul>
+            <div class="modal-body">
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label class="form-label" for="eventTitle">Event Title</label>
+                        <input type="text" class="form-control" id="eventTitle" placeholder="Enter event title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="eventType">Event Type</label>
+                        <select class="form-select" id="eventType" required>
+                            <option value="">Select event type</option>
+                            <option value="expert-session">Expert Session</option>
+                            <option value="alumni-meet">Alumni Meet</option>
+                            <option value="guest-lecture">Guest Lecture</option>
+                            <option value="workshop">Workshop</option>
+                            <option value="seminar">Seminar</option>
+                            <option value="industry-visit">Industry Visit</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="eventDate">Event Date</label>
+                        <input type="date" class="form-control" id="eventDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="eventTime">Event Time</label>
+                        <input type="time" class="form-control" id="eventTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="eventVenue">Venue</label>
+                        <input type="text" class="form-control" id="eventVenue" placeholder="Enter venue" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="eventCapacity">Capacity</label>
+                        <input type="number" class="form-control" id="eventCapacity" placeholder="Enter maximum participants" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="eventDescription">Event Description</label>
+                        <textarea class="form-control form-textarea" id="eventDescription" placeholder="Enter event description" required></textarea>
+                    </div>
+                </form>
             </div>
-            <div class="footer-section">
-                <h3>Support</h3>
-                <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">User Manual</a></li>
-                    <li><a href="#">Contact Admin</a></li>
-                    <li><a href="#">Feedback</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact Info</h3>
-                <ul>
-                    <li><i class="fas fa-map-marker-alt"></i> SVPCET, Nagpur</li>
-                    <li><i class="fas fa-phone"></i> +91 9876543210</li>
-                    <li><i class="fas fa-envelope"></i> support@events.edu</li>
-                </ul>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelEventBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveEventBtn">Create Event</button>
             </div>
         </div>
-        <div class="copyright">
-            &copy; 2023 College Event Management System. Developed by PRATHAM | SVPCET | Academic Year 2025-2026
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <h3>Event Management System</h3>
+                    <p>A comprehensive solution for managing college events, resources, and participants.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Events Calendar</a></li>
+                        <li><a href="#">Create Event</a></li>
+                        <li><a href="#">Reports</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">User Manual</a></li>
+                        <li><a href="#">Contact Admin</a></li>
+                        <li><a href="#">Feedback</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> SVPCET, Nagpur</li>
+                        <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                        <li><i class="fas fa-envelope"></i> support@events.edu</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 College Event Management System. Developed by PRATHAM | SVPCET | Academic Year 2025-2026
+            </div>
         </div>
     </footer>
 
     <script>
-        // Simple JavaScript for interactive elements
+        // ========== APPLICATION DATA ==========
+        const eventData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            events: [5, 7, 10, 8, 12, 15, 9, 11, 14, 12, 8, 6],
+            participants: [120, 180, 250, 210, 300, 420, 280, 320, 380, 350, 240, 180],
+            attendance: [85, 88, 92, 87, 90, 94, 86, 91, 93, 89, 87, 84]
+        };
+
+        const events = [
+            {
+                id: 1,
+                title: "Industry Expert Session",
+                date: "2023-10-15",
+                time: "14:00",
+                venue: "Main Auditorium",
+                capacity: 100,
+                registered: 48,
+                type: "expert-session",
+                description: "Interactive session with industry leaders on emerging technologies.",
+                status: "active"
+            },
+            {
+                id: 2,
+                title: "Alumni Meet 2023",
+                date: "2023-10-22",
+                time: "10:00",
+                venue: "College Ground",
+                capacity: 200,
+                registered: 92,
+                type: "alumni-meet",
+                description: "Annual alumni networking event with keynote speakers.",
+                status: "active"
+            },
+            {
+                id: 3,
+                title: "Research Workshop",
+                date: "2023-11-05",
+                time: "09:30",
+                venue: "Seminar Hall A",
+                capacity: 50,
+                registered: 25,
+                type: "workshop",
+                description: "Hands-on workshop on research methodology and publication.",
+                status: "active"
+            }
+        ];
+
+        // ========== DOM ELEMENTS ==========
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        const createEventBtn = document.getElementById('createEventBtn');
+        const createEventModal = document.getElementById('createEventModal');
+        const closeEventModal = document.getElementById('closeEventModal');
+        const cancelEventBtn = document.getElementById('cancelEventBtn');
+        const saveEventBtn = document.getElementById('saveEventBtn');
+        const eventForm = document.getElementById('eventForm');
+
+        // ========== EVENT LISTENERS ==========
         document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle (would be implemented in a real application)
-            console.log('Event Management System loaded');
+            initializeApp();
+        });
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        createEventBtn.addEventListener('click', openCreateEventModal);
+        closeEventModal.addEventListener('click', closeCreateEventModal);
+        cancelEventBtn.addEventListener('click', closeCreateEventModal);
+        saveEventBtn.addEventListener('click', saveEvent);
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === createEventModal) {
+                closeCreateEventModal();
+            }
+        });
+
+        // ========== FUNCTIONS ==========
+        function initializeApp() {
+            console.log('Initializing College Event Management System...');
+            renderAnalyticsChart();
+            updateStats();
+            // Simulate loading data
+            setTimeout(() => {
+                console.log('System fully loaded');
+            }, 1000);
+        }
+
+        function toggleMobileMenu() {
+            mainNav.classList.toggle('active');
+        }
+
+        function openCreateEventModal() {
+            createEventModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCreateEventModal() {
+            createEventModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            eventForm.reset();
+        }
+
+        function saveEvent() {
+            // Basic form validation
+            const eventTitle = document.getElementById('eventTitle').value;
+            const eventType = document.getElementById('eventType').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const eventTime = document.getElementById('eventTime').value;
+            const eventVenue = document.getElementById('eventVenue').value;
+            const eventCapacity = document.getElementById('eventCapacity').value;
+            const eventDescription = document.getElementById('eventDescription').value;
+
+            if (!eventTitle || !eventType || !eventDate || !eventTime || !eventVenue || !eventCapacity || !eventDescription) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Create new event object
+            const newEvent = {
+                id: events.length + 1,
+                title: eventTitle,
+                date: eventDate,
+                time: eventTime,
+                venue: eventVenue,
+                capacity: parseInt(eventCapacity),
+                registered: 0,
+                type: eventType,
+                description: eventDescription,
+                status: "draft"
+            };
+
+            // Add to events array
+            events.push(newEvent);
+
+            // Show success message
+            alert('Event created successfully!');
+
+            // Close modal
+            closeCreateEventModal();
+
+            // Update UI
+            updateEventsDisplay();
+            updateStats();
+        }
+
+        function updateEventsDisplay() {
+            // In a real application, this would update the events grid
+            console.log('Events updated:', events);
+        }
+
+        function updateStats() {
+            // Update statistics based on current data
+            const totalEvents = events.length;
+            const totalParticipants = events.reduce((sum, event) => sum + event.registered, 0);
+            const upcomingEvents = events.filter(event => new Date(event.date) >= new Date()).length;
             
-            // Example: Button click handlers
-            const manageButtons = document.querySelectorAll('.btn-accent');
-            manageButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    alert('Event management panel would open here');
+            // Update DOM elements
+            document.querySelectorAll('.stat-card .stat-value')[0].textContent = upcomingEvents;
+            document.querySelectorAll('.stat-card .stat-value')[1].textContent = totalParticipants;
+            
+            console.log('Stats updated');
+        }
+
+        function renderAnalyticsChart() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.analyticsChartInstance) {
+                window.analyticsChartInstance.destroy();
+            }
+            
+            window.analyticsChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: eventData.labels,
+                    datasets: [
+                        {
+                            label: 'Events',
+                            data: eventData.events,
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Participants',
+                            data: eventData.participants,
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 1,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Number of Events'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Number of Participants'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Event Statistics (2023)'
+                        }
+                    }
+                }
+            });
+        }
+
+        // ========== ADDITIONAL FEATURES ==========
+        
+        // Simulate real-time notifications
+        function simulateNotifications() {
+            setInterval(() => {
+                const notifications = [
+                    "New registration for Industry Expert Session",
+                    "Reminder: Alumni Meet starts in 2 days",
+                    "5 new participants joined Research Workshop",
+                    "Attendance report generated for Career Guidance Workshop"
+                ];
+                
+                const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+                console.log('Notification:', randomNotification);
+                
+                // In a real app, this would show a toast notification
+            }, 30000); // Every 30 seconds
+        }
+
+        // Initialize notifications simulation
+        simulateNotifications();
+
+        // Search functionality
+        function setupSearch() {
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.placeholder = 'Search events...';
+            searchInput.className = 'form-control';
+            searchInput.style.marginBottom = '1rem';
+            
+            // Add search input to events card
+            const eventsCard = document.querySelector('.card');
+            eventsCard.insertBefore(searchInput, eventsCard.querySelector('.events-grid'));
+            
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const eventCards = document.querySelectorAll('.event-card');
+                
+                eventCards.forEach(card => {
+                    const title = card.querySelector('.event-title').textContent.toLowerCase();
+                    const description = card.querySelector('.event-description').textContent.toLowerCase();
+                    
+                    if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
             });
+        }
+
+        // Initialize search
+        setupSearch();
+
+        // Export functionality
+        function setupExport() {
+            const exportBtn = document.createElement('button');
+            exportBtn.className = 'btn btn-success btn-sm';
+            exportBtn.innerHTML = '<i class="fas fa-download"></i> Export Data';
             
-            // Create Event button
-            const createEventBtn = document.querySelector('.btn-primary');
-            createEventBtn.addEventListener('click', function() {
-                alert('Event creation form would open here');
+            // Add export button to analytics card header
+            const analyticsHeader = document.querySelector('.card .card-header');
+            analyticsHeader.appendChild(exportBtn);
+            
+            exportBtn.addEventListener('click', function() {
+                // In a real app, this would generate and download a CSV/Excel file
+                alert('Exporting data... This would download a report in a real application.');
             });
+        }
+
+        // Initialize export
+        setupExport();
+
+        // Dark mode toggle (bonus feature)
+        function setupDarkMode() {
+            const darkModeToggle = document.createElement('button');
+            darkModeToggle.className = 'btn btn-outline btn-sm';
+            darkModeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+            
+            // Add to user actions
+            const userActions = document.querySelector('.user-actions');
+            userActions.insertBefore(darkModeToggle, userActions.querySelector('.btn-primary'));
+            
+            darkModeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+                    // In a real app, we would update CSS variables for dark mode
+                } else {
+                    darkModeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+                }
+            });
+        }
+
+        // Initialize dark mode
+        setupDarkMode();
+
+        // Print functionality for reports
+        function setupPrint() {
+            const printBtn = document.createElement('button');
+            printBtn.className = 'btn btn-outline btn-sm';
+            printBtn.innerHTML = '<i class="fas fa-print"></i> Print Report';
+            
+            // Add print button to recent activity card
+            const activityHeader = document.querySelectorAll('.card .card-header')[2];
+            activityHeader.appendChild(printBtn);
+            
+            printBtn.addEventListener('click', function() {
+                window.print();
+            });
+        }
+
+        // Initialize print
+        setupPrint();
+
+        // Auto-save form data
+        function setupAutoSave() {
+            const formFields = eventForm.querySelectorAll('input, select, textarea');
+            
+            formFields.forEach(field => {
+                field.addEventListener('input', function() {
+                    // In a real app, we would save to localStorage or send to server
+                    console.log('Form data changed:', field.id, field.value);
+                });
+            });
+        }
+
+        // Initialize auto-save
+        setupAutoSave();
+
+        // Responsive chart resizing
+        window.addEventListener('resize', function() {
+            if (window.analyticsChartInstance) {
+                window.analyticsChartInstance.resize();
+            }
         });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + N to create new event
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                openCreateEventModal();
+            }
+            
+            // Escape to close modal
+            if (e.key === 'Escape') {
+                closeCreateEventModal();
+            }
+        });
+
+        console.log('College Event Management System initialized successfully!');
     </script>
 </body>
 </html>
