@@ -1,1 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Event Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #17a2b8;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a.active {
+            color: var(--accent);
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background-color: #16a085;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--light);
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.8rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.7rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: var(--light);
+            color: var(--secondary);
+        }
+
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-banner h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-banner p {
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            border: 1px solid var(--light);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-image {
+            height: 160px;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .event-content {
+            padding: 1.2rem;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .event-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .event-meta i {
+            margin-right: 0.3rem;
+        }
+
+        .event-description {
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+            color: #5a6c7d;
+        }
+
+        .event-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--secondary);
+        }
+
+        .badge-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .data-table th {
+            background-color: var(--light);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(236, 240, 241, 0.5);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            margin: 1.5rem 0;
+        }
+
+        /* Certificate Preview */
+        .certificate-preview {
+            border: 2px solid #ddd;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            background-color: #f9f9f9;
+            text-align: center;
+            position: relative;
+        }
+
+        .certificate-border {
+            border: 3px double var(--primary);
+            padding: 2rem;
+        }
+
+        .certificate-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .certificate-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--secondary);
+        }
+
+        .certificate-content {
+            margin: 2rem 0;
+            font-size: 1.1rem;
+        }
+
+        .certificate-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-section a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+            
+            .card {
+                padding: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo" id="logo">
+                <i class="fas fa-calendar-alt"></i>
+                <h1>Event Management System</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-page="events">Events</a></li>
+                    <li><a href="#" class="nav-link" data-page="calendar">Calendar</a></li>
+                    <li><a href="#" class="nav-link" data-page="reports">Reports</a></li>
+                    <li><a href="#" class="nav-link" data-page="resources">Resources</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <button class="btn btn-outline" id="notification-btn"><i class="fas fa-bell"></i></button>
+                <button class="btn btn-primary"><i class="fas fa-user"></i> Dr. Sharma</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="dashboard">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h2 class="sidebar-title"><i class="fas fa-tachometer-alt"></i> Faculty Dashboard</h2>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="sidebar-link active" data-page="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="create-event"><i class="fas fa-plus-circle"></i> Create Event</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="my-events"><i class="fas fa-calendar-check"></i> My Events</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="participants"><i class="fas fa-users"></i> Participants</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="attendance"><i class="fas fa-clipboard-list"></i> Attendance</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="reports"><i class="fas fa-file-pdf"></i> Reports</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="certificates"><i class="fas fa-certificate"></i> Certificates</a></li>
+                    <li><a href="#" class="sidebar-link" data-page="settings"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page-content active">
+                    <!-- Welcome Banner -->
+                    <div class="welcome-banner">
+                        <h2>Welcome, Dr. Sharma!</h2>
+                        <p>Manage your events, track attendance, generate reports, and more from your faculty dashboard.</p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <i class="fas fa-calendar"></i>
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Upcoming Events</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <div class="stat-value">347</div>
+                            <div class="stat-label">Total Participants</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-chart-line"></i>
+                            <div class="stat-value">84%</div>
+                            <div class="stat-label">Attendance Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-file-alt"></i>
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Reports Generated</div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Events -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-list"></i> Upcoming Events</h3>
+                            <button class="btn btn-primary" id="create-event-btn">Create New Event</button>
+                        </div>
+                        <div class="events-grid">
+                            <!-- Event Card 1 -->
+                            <div class="event-card">
+                                <div class="event-image">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4 class="event-title">Industry Expert Session</h4>
+                                    <div class="event-meta">
+                                        <span><i class="far fa-calendar"></i> Oct 15, 2023</span>
+                                        <span><i class="far fa-clock"></i> 2:00 PM</span>
+                                    </div>
+                                    <p class="event-description">Interactive session with industry leaders on emerging technologies.</p>
+                                    <div class="event-actions">
+                                        <span class="badge badge-primary">48 Registered</span>
+                                        <button class="btn btn-accent manage-event-btn" data-id="1">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Card 2 -->
+                            <div class="event-card">
+                                <div class="event-image">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4 class="event-title">Alumni Meet 2023</h4>
+                                    <div class="event-meta">
+                                        <span><i class="far fa-calendar"></i> Oct 22, 2023</span>
+                                        <span><i class="far fa-clock"></i> 10:00 AM</span>
+                                    </div>
+                                    <p class="event-description">Annual alumni networking event with keynote speakers.</p>
+                                    <div class="event-actions">
+                                        <span class="badge badge-success">92 Registered</span>
+                                        <button class="btn btn-accent manage-event-btn" data-id="2">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Card 3 -->
+                            <div class="event-card">
+                                <div class="event-image">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <div class="event-content">
+                                    <h4 class="event-title">Research Workshop</h4>
+                                    <div class="event-meta">
+                                        <span><i class="far fa-calendar"></i> Nov 5, 2023</span>
+                                        <span><i class="far fa-clock"></i> 9:30 AM</span>
+                                    </div>
+                                    <p class="event-description">Hands-on workshop on research methodology and publication.</p>
+                                    <div class="event-actions">
+                                        <span class="badge badge-warning">25 Registered</span>
+                                        <button class="btn btn-accent manage-event-btn" data-id="3">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-history"></i> Recent Activity</h3>
+                        </div>
+                        <div class="activity-list">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Activity</th>
+                                            <th>Event</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Oct 10, 2023</td>
+                                            <td>New registration for Industry Expert Session</td>
+                                            <td>Industry Expert Session</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Oct 9, 2023</td>
+                                            <td>Event created: Research Workshop</td>
+                                            <td>Research Workshop</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Oct 8, 2023</td>
+                                            <td>Attendance marked for Alumni Meet</td>
+                                            <td>Alumni Meet 2023</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Oct 7, 2023</td>
+                                            <td>Report generated: Monthly Summary</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Oct 6, 2023</td>
+                                            <td>Certificate issued for Web Development Workshop</td>
+                                            <td>Web Development Workshop</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Event Page -->
+                <div id="create-event" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-plus-circle"></i> Create New Event</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="event-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="event-title">Event Title</label>
+                                        <input type="text" id="event-title" class="form-control" placeholder="Enter event title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="event-category">Category</label>
+                                        <select id="event-category" class="form-control" required>
+                                            <option value="">Select category</option>
+                                            <option value="workshop">Workshop</option>
+                                            <option value="seminar">Seminar</option>
+                                            <option value="conference">Conference</option>
+                                            <option value="cultural">Cultural</option>
+                                            <option value="sports">Sports</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-description">Event Description</label>
+                                    <textarea id="event-description" class="form-control" placeholder="Describe the event" required></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="event-date">Date</label>
+                                        <input type="date" id="event-date" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="event-time">Time</label>
+                                        <input type="time" id="event-time" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="event-location">Location</label>
+                                        <input type="text" id="event-location" class="form-control" placeholder="Enter venue" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="event-capacity">Capacity</label>
+                                        <input type="number" id="event-capacity" class="form-control" placeholder="Maximum participants" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="event-image">Event Image (URL)</label>
+                                    <input type="url" id="event-image" class="form-control" placeholder="https://example.com/image.jpg">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-accent">Create Event</button>
+                                    <button type="button" class="btn btn-outline" id="cancel-event">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Events Page -->
+                <div id="my-events" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-calendar-check"></i> My Events</h3>
+                            <button class="btn btn-primary" id="add-event-btn">Add Event</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Event Name</th>
+                                            <th>Date</th>
+                                            <th>Location</th>
+                                            <th>Participants</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Industry Expert Session</td>
+                                            <td>Oct 15, 2023</td>
+                                            <td>Main Auditorium</td>
+                                            <td>48/100</td>
+                                            <td><span class="badge badge-primary">Upcoming</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">Manage</button>
+                                                <button class="btn btn-outline btn-sm">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alumni Meet 2023</td>
+                                            <td>Oct 22, 2023</td>
+                                            <td>Conference Hall</td>
+                                            <td>92/150</td>
+                                            <td><span class="badge badge-primary">Upcoming</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">Manage</button>
+                                                <button class="btn btn-outline btn-sm">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Research Workshop</td>
+                                            <td>Nov 5, 2023</td>
+                                            <td>Lab Building</td>
+                                            <td>25/30</td>
+                                            <td><span class="badge badge-primary">Upcoming</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">Manage</button>
+                                                <button class="btn btn-outline btn-sm">Edit</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Web Development Bootcamp</td>
+                                            <td>Sep 20, 2023</td>
+                                            <td>Computer Lab</td>
+                                            <td>45/45</td>
+                                            <td><span class="badge badge-success">Completed</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Report</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Career Guidance Session</td>
+                                            <td>Aug 15, 2023</td>
+                                            <td>Seminar Hall</td>
+                                            <td>78/80</td>
+                                            <td><span class="badge badge-success">Completed</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Report</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Participants Page -->
+                <div id="participants" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-users"></i> Participants</h3>
+                            <div>
+                                <select id="event-filter" class="form-control" style="display: inline-block; width: auto;">
+                                    <option value="all">All Events</option>
+                                    <option value="1">Industry Expert Session</option>
+                                    <option value="2">Alumni Meet 2023</option>
+                                    <option value="3">Research Workshop</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Department</th>
+                                            <th>Year</th>
+                                            <th>Events Registered</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Rahul Kumar</td>
+                                            <td>rahul.k@example.com</td>
+                                            <td>Computer Science</td>
+                                            <td>3rd Year</td>
+                                            <td>5</td>
+                                            <td><span class="badge badge-success">Active</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Message</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Priya Sharma</td>
+                                            <td>priya.s@example.com</td>
+                                            <td>Electronics</td>
+                                            <td>2nd Year</td>
+                                            <td>3</td>
+                                            <td><span class="badge badge-success">Active</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Message</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Amit Patel</td>
+                                            <td>amit.p@example.com</td>
+                                            <td>Mechanical</td>
+                                            <td>4th Year</td>
+                                            <td>7</td>
+                                            <td><span class="badge badge-warning">Pending</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Approve</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Neha Gupta</td>
+                                            <td>neha.g@example.com</td>
+                                            <td>Civil</td>
+                                            <td>1st Year</td>
+                                            <td>2</td>
+                                            <td><span class="badge badge-success">Active</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Message</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sanjay Verma</td>
+                                            <td>sanjay.v@example.com</td>
+                                            <td>Computer Science</td>
+                                            <td>3rd Year</td>
+                                            <td>4</td>
+                                            <td><span class="badge badge-danger">Inactive</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Activate</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Page -->
+                <div id="attendance" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-clipboard-list"></i> Attendance</h3>
+                            <div>
+                                <select id="attendance-event" class="form-control" style="display: inline-block; width: auto;">
+                                    <option value="">Select Event</option>
+                                    <option value="1">Industry Expert Session</option>
+                                    <option value="2">Alumni Meet 2023</option>
+                                    <option value="3">Research Workshop</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Department</th>
+                                            <th>Check-in Time</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Rahul Kumar</td>
+                                            <td>rahul.k@example.com</td>
+                                            <td>Computer Science</td>
+                                            <td>Oct 15, 2023 2:05 PM</td>
+                                            <td><span class="badge badge-success">Present</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-outline btn-sm">Mark Absent</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Priya Sharma</td>
+                                            <td>priya.s@example.com</td>
+                                            <td>Electronics</td>
+                                            <td>Oct 15, 2023 2:15 PM</td>
+                                            <td><span class="badge badge-success">Present</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-outline btn-sm">Mark Absent</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Amit Patel</td>
+                                            <td>amit.p@example.com</td>
+                                            <td>Mechanical</td>
+                                            <td>-</td>
+                                            <td><span class="badge badge-danger">Absent</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">Mark Present</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Neha Gupta</td>
+                                            <td>neha.g@example.com</td>
+                                            <td>Civil</td>
+                                            <td>Oct 15, 2023 1:55 PM</td>
+                                            <td><span class="badge badge-success">Present</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-outline btn-sm">Mark Absent</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sanjay Verma</td>
+                                            <td>sanjay.v@example.com</td>
+                                            <td>Computer Science</td>
+                                            <td>-</td>
+                                            <td><span class="badge badge-warning">Late</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">Mark Present</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Page -->
+                <div id="analytics" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-chart-bar"></i> Analytics</h3>
+                            <div>
+                                <select id="analytics-period" class="form-control" style="display: inline-block; width: auto;">
+                                    <option value="week">Last Week</option>
+                                    <option value="month">Last Month</option>
+                                    <option value="quarter">Last Quarter</option>
+                                    <option value="year">Last Year</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="stats-container">
+                                <div class="stat-card">
+                                    <i class="fas fa-calendar"></i>
+                                    <div class="stat-value">12</div>
+                                    <div class="stat-label">Events This Month</div>
+                                </div>
+                                <div class="stat-card">
+                                    <i class="fas fa-users"></i>
+                                    <div class="stat-value">347</div>
+                                    <div class="stat-label">Total Participants</div>
+                                </div>
+                                <div class="stat-card">
+                                    <i class="fas fa-chart-line"></i>
+                                    <div class="stat-value">84%</div>
+                                    <div class="stat-label">Average Attendance</div>
+                                </div>
+                                <div class="stat-card">
+                                    <i class="fas fa-star"></i>
+                                    <div class="stat-value">4.7/5</div>
+                                    <div class="stat-label">Average Rating</div>
+                                </div>
+                            </div>
+
+                            <div class="chart-container">
+                                <canvas id="attendanceChart"></canvas>
+                            </div>
+
+                            <div class="chart-container">
+                                <canvas id="eventTypeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reports" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-file-pdf"></i> Reports</h3>
+                            <button class="btn btn-primary" id="generate-report-btn">Generate Report</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Report Name</th>
+                                            <th>Generated On</th>
+                                            <th>Period</th>
+                                            <th>Size</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Monthly Event Summary - September 2023</td>
+                                            <td>Oct 1, 2023</td>
+                                            <td>Sep 1 - Sep 30, 2023</td>
+                                            <td>2.4 MB</td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Share</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Attendance Report - Alumni Meet</td>
+                                            <td>Sep 25, 2023</td>
+                                            <td>Sep 22, 2023</td>
+                                            <td>1.1 MB</td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Share</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Participant Feedback Analysis</td>
+                                            <td>Sep 18, 2023</td>
+                                            <td>Aug 1 - Sep 15, 2023</td>
+                                            <td>3.2 MB</td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Share</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Quarterly Performance Report</td>
+                                            <td>Jul 5, 2023</td>
+                                            <td>Apr 1 - Jun 30, 2023</td>
+                                            <td>5.7 MB</td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Share</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Annual Event Summary 2022</td>
+                                            <td>Jan 10, 2023</td>
+                                            <td>Jan 1 - Dec 31, 2022</td>
+                                            <td>12.3 MB</td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Share</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certificates Page -->
+                <div id="certificates" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-certificate"></i> Certificates</h3>
+                            <button class="btn btn-primary" id="generate-certificate-btn">Generate Certificate</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="certificate-preview">
+                                <div class="certificate-border">
+                                    <div class="certificate-title">Certificate of Participation</div>
+                                    <div class="certificate-subtitle">This certificate is proudly presented to</div>
+                                    <div class="certificate-content">
+                                        <h2>Rahul Kumar</h2>
+                                        <p>for successfully participating in the</p>
+                                        <h3>Industry Expert Session</h3>
+                                        <p>held on October 15, 2023</p>
+                                    </div>
+                                    <div class="certificate-footer">
+                                        <div>
+                                            <p>Dr. Sharma</p>
+                                            <p>Event Coordinator</p>
+                                        </div>
+                                        <div>
+                                            <p>Dr. A. Patel</p>
+                                            <p>Head of Department</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Participant Name</th>
+                                            <th>Event</th>
+                                            <th>Issue Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Rahul Kumar</td>
+                                            <td>Industry Expert Session</td>
+                                            <td>Oct 16, 2023</td>
+                                            <td><span class="badge badge-success">Issued</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Email</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Priya Sharma</td>
+                                            <td>Alumni Meet 2023</td>
+                                            <td>Oct 23, 2023</td>
+                                            <td><span class="badge badge-success">Issued</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Email</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Amit Patel</td>
+                                            <td>Research Workshop</td>
+                                            <td>-</td>
+                                            <td><span class="badge badge-warning">Pending</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">Generate</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Neha Gupta</td>
+                                            <td>Web Development Bootcamp</td>
+                                            <td>Sep 21, 2023</td>
+                                            <td><span class="badge badge-success">Issued</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Email</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sanjay Verma</td>
+                                            <td>Career Guidance Session</td>
+                                            <td>Aug 16, 2023</td>
+                                            <td><span class="badge badge-success">Issued</span></td>
+                                            <td class="action-buttons">
+                                                <button class="btn btn-accent btn-sm">View</button>
+                                                <button class="btn btn-outline btn-sm">Download</button>
+                                                <button class="btn btn-outline btn-sm">Email</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-cog"></i> Settings</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first-name">First Name</label>
+                                    <input type="text" id="first-name" class="form-control" value="Rajesh">
+                                </div>
+                                <div class="form-group">
+                                    <label for="last-name">Last Name</label>
+                                    <input type="text" id="last-name" class="form-control" value="Sharma">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" value="r.sharma@college.edu">
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <select id="department" class="form-control">
+                                    <option value="cs">Computer Science</option>
+                                    <option value="ece">Electronics & Communication</option>
+                                    <option value="me">Mechanical Engineering</option>
+                                    <option value="ce">Civil Engineering</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-control" value="+91 9876543210">
+                            </div>
+                            <div class="form-group">
+                                <label for="notifications">Notifications</label>
+                                <div>
+                                    <input type="checkbox" id="email-notifications" checked>
+                                    <label for="email-notifications">Email Notifications</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="sms-notifications">
+                                    <label for="sms-notifications">SMS Notifications</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="event-reminders" checked>
+                                    <label for="event-reminders">Event Reminders</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-accent">Save Changes</button>
+                                <button class="btn btn-outline">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Page -->
+                <div id="calendar" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-calendar-alt"></i> Event Calendar</h3>
+                            <div>
+                                <button class="btn btn-outline"><i class="fas fa-chevron-left"></i></button>
+                                <span style="margin: 0 1rem;">October 2023</span>
+                                <button class="btn btn-outline"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 1rem;">
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Sun</div>
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Mon</div>
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Tue</div>
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Wed</div>
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Thu</div>
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Fri</div>
+                                <div class="text-center" style="padding: 10px; font-weight: bold;">Sat</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;">
+                                <!-- Calendar days would be generated here -->
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">1</div>
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">2</div>
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">3</div>
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">4</div>
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">5</div>
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">6</div>
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px;">7</div>
+                                <!-- More days... -->
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px; background-color: rgba(52, 152, 219, 0.1);">
+                                    15
+                                    <div class="badge badge-primary" style="font-size: 0.7rem;">Industry Expert Session</div>
+                                </div>
+                                <!-- More days... -->
+                                <div style="height: 100px; border: 1px solid #eee; padding: 5px; background-color: rgba(46, 204, 113, 0.1);">
+                                    22
+                                    <div class="badge badge-success" style="font-size: 0.7rem;">Alumni Meet</div>
+                                </div>
+                                <!-- More days... -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resources Page -->
+                <div id="resources" class="page-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-file-alt"></i> Resources</h3>
+                            <button class="btn btn-primary">Upload Resource</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="events-grid">
+                                <div class="event-card">
+                                    <div class="event-image" style="background-color: var(--accent);">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="event-content">
+                                        <h4 class="event-title">Event Planning Guide</h4>
+                                        <p class="event-description">Comprehensive guide for organizing successful college events.</p>
+                                        <div class="event-actions">
+                                            <span class="badge badge-primary">PDF</span>
+                                            <button class="btn btn-accent">Download</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event-card">
+                                    <div class="event-image" style="background-color: var(--warning);">
+                                        <i class="fas fa-file-video"></i>
+                                    </div>
+                                    <div class="event-content">
+                                        <h4 class="event-title">Event Promotion Video</h4>
+                                        <p class="event-description">Template video for promoting your events on social media.</p>
+                                        <div class="event-actions">
+                                            <span class="badge badge-warning">MP4</span>
+                                            <button class="btn btn-accent">Download</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event-card">
+                                    <div class="event-image" style="background-color: var(--success);">
+                                        <i class="fas fa-file-image"></i>
+                                    </div>
+                                    <div class="event-content">
+                                        <h4 class="event-title">Event Poster Templates</h4>
+                                        <p class="event-description">Collection of customizable poster templates for events.</p>
+                                        <div class="event-actions">
+                                            <span class="badge badge-success">ZIP</span>
+                                            <button class="btn btn-accent">Download</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Event Management System</h3>
+                <p>A comprehensive solution for managing college events, resources, and participants.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#" class="footer-link" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" class="footer-link" data-page="calendar">Events Calendar</a></li>
+                    <li><a href="#" class="footer-link" data-page="create-event">Create Event</a></li>
+                    <li><a href="#" class="footer-link" data-page="reports">Reports</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">User Manual</a></li>
+                    <li><a href="#">Contact Admin</a></li>
+                    <li><a href="#">Feedback</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> SVPCET, Nagpur</li>
+                    <li><i class="fas fa-phone"></i> +91 9876543210</li>
+                    <li><i class="fas fa-envelope"></i> support@events.edu</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 College Event Management System. Developed by PRATHAM | SVPCET | Academic Year 2025-2026
+        </div>
+    </footer>
+
+    <!-- Event Management Modal -->
+    <div class="modal" id="event-management-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Manage Event</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4 id="modal-event-title">Industry Expert Session</h4>
+                <div class="form-group">
+                    <label for="modal-event-status">Event Status</label>
+                    <select id="modal-event-status" class="form-control">
+                        <option value="upcoming">Upcoming</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modal-event-notes">Event Notes</label>
+                    <textarea id="modal-event-notes" class="form-control" placeholder="Add notes about the event..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-accent">Save Changes</button>
+                <button class="btn btn-outline modal-close">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation elements
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            const footerLinks = document.querySelectorAll('.footer-link');
+            const pageContents = document.querySelectorAll('.page-content');
+            const logo = document.getElementById('logo');
+            
+            // Function to show a specific page
+            function showPage(pageId) {
+                // Hide all pages
+                pageContents.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Show the selected page
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+                
+                // Update active states in navigation
+                const allLinks = document.querySelectorAll('.nav-link, .sidebar-link');
+                allLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add event listeners to navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+            
+            // Add event listeners to sidebar links
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+            
+            // Add event listeners to footer links
+            footerLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+            
+            // Logo click to go to dashboard
+            logo.addEventListener('click', function() {
+                showPage('dashboard');
+            });
+            
+            // Event creation button
+            const createEventBtn = document.getElementById('create-event-btn');
+            if (createEventBtn) {
+                createEventBtn.addEventListener('click', function() {
+                    showPage('create-event');
+                });
+            }
+            
+            // Add event button in My Events
+            const addEventBtn = document.getElementById('add-event-btn');
+            if (addEventBtn) {
+                addEventBtn.addEventListener('click', function() {
+                    showPage('create-event');
+                });
+            }
+            
+            // Cancel event creation
+            const cancelEventBtn = document.getElementById('cancel-event');
+            if (cancelEventBtn) {
+                cancelEventBtn.addEventListener('click', function() {
+                    showPage('dashboard');
+                });
+            }
+            
+            // Event form submission
+            const eventForm = document.getElementById('event-form');
+            if (eventForm) {
+                eventForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Event created successfully!');
+                    showPage('dashboard');
+                });
+            }
+            
+            // Event management modal
+            const manageEventBtns = document.querySelectorAll('.manage-event-btn');
+            const eventModal = document.getElementById('event-management-modal');
+            const modalCloseBtns = document.querySelectorAll('.modal-close');
+            
+            manageEventBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const eventId = this.getAttribute('data-id');
+                    // In a real app, we would fetch event details based on ID
+                    eventModal.style.display = 'flex';
+                });
+            });
+            
+            modalCloseBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    eventModal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === eventModal) {
+                    eventModal.style.display = 'none';
+                }
+            });
+            
+            // Notification button
+            const notificationBtn = document.getElementById('notification-btn');
+            if (notificationBtn) {
+                notificationBtn.addEventListener('click', function() {
+                    alert('You have 3 new notifications');
+                });
+            }
+            
+            // Generate report button
+            const generateReportBtn = document.getElementById('generate-report-btn');
+            if (generateReportBtn) {
+                generateReportBtn.addEventListener('click', function() {
+                    alert('Report generation started. You will receive an email when it is ready.');
+                });
+            }
+            
+            // Generate certificate button
+            const generateCertificateBtn = document.getElementById('generate-certificate-btn');
+            if (generateCertificateBtn) {
+                generateCertificateBtn.addEventListener('click', function() {
+                    alert('Certificate generation started. You will receive an email when it is ready.');
+                });
+            }
+            
+            // Initialize charts on analytics page
+            function initCharts() {
+                // This would initialize charts using a library like Chart.js
+                // For now, we'll just log to console
+                console.log('Charts would be initialized here');
+            }
+            
+            // Check if analytics page is active and initialize charts
+            const analyticsPage = document.getElementById('analytics');
+            if (analyticsPage && analyticsPage.classList.contains('active')) {
+                initCharts();
+            }
+        });
+    </script>
+</body>
+</html>
